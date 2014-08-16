@@ -11,16 +11,19 @@ class PulseSynth {
 private:
 	OscPulse osc;
 	float    tune;
-public:
 
-	float width;
+public:
+	bool     mute;
+	float    width;
 
 	PulseSynth() {
 		tune = 0.0;
+		mute = true;
 		osc.width = 0.5;
 	}
 
     float tic() {
+    	if (mute) return 0.0;
 		osc.tic();
 		return osc.out;
 	}
@@ -38,7 +41,7 @@ public:
 		// TODO: reset pitch ?
 	}
 
-	void setPitch(float note) {
+	void setNote(float note) {
 		osc.freq = noteToFreq(note + tune);
 	}
 };

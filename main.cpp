@@ -36,8 +36,6 @@ inline float cubicLimiterDisto(float x) {
 float       mainVolume = 0.5;
 PulseSynth  pulseSynth;
 
-
-
 void audioCallback(void* udata, uint8_t* buffer, int len) {
 
 	int16_t* stream = (int16_t*) buffer;
@@ -54,19 +52,31 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 	}
 }
 
+void midiCallback(int note, bool play) {
+	if (!play) {
+		pulseSynth.mute = true;
+	} else {
+		pulseSynth.setNote(note);
+		pulseSynth.mute = false;
+	}
+		
+}
+
 
 int main(int argc, char* argv[]) {
 
 	// initialize Launchpad MIDI
 	Launchpad launchpad;
 	launchpad.initMidi();
+	launchpad.bind(&midiCallback);
+
 	// test
-	for (int x = 0; x < 4; x++) {
+	/*for (int x = 0; x < 4; x++) {
 		for (int y = 0; y < 4; y++) {
 			launchpad.plot(x * 2,     y * 2,     x, y);
 			launchpad.plot(x * 2 + 1, y * 2 + 1, x, y);
 		}
-	}
+	}*/
 
 	// initialize SDL video and audio
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) return 1;
@@ -98,10 +108,11 @@ int main(int argc, char* argv[]) {
 	font.paper(0);
 	font.pen(26);
 	font.locate(2, 2);
-	font.print("==== CHIPER ====");
+	font.print("==== CHIPER! ====");
 
 	// program main loop
 	bool run = true;
+	bool update = true;
 	while (run) {
 
 		//-------------------------
@@ -129,9 +140,12 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		ctx.clear();
-		ctx.drawImage(font.getImage(), 0, 0);
-		ctx.update();
+		if (update) {
+			ctx.clear();
+			ctx.drawImage(font.getImage(), 0, 0);
+			ctx.update();
+			update = false;
+		}
 
 		SDL_Delay(40); // 25 FPS
 	}

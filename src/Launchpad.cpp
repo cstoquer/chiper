@@ -10,6 +10,7 @@ Launchpad::Launchpad() {
 	midiOut = NULL;
 	midiInOpened  = false;
 	midiOutOpened = false;
+	bindPadsFunc = NULL;
 	for (int i = 0; i < 64; i++) grid[i] = 0;
 }
 
@@ -49,8 +50,17 @@ void CALLBACK MidiInCb(HMIDIIN device, uint16_t msg, Launchpad* launchpad,
 
 	// TODO: store note in buffer
 
-	if (velo == 0) launchpad->clear(x, y);             // key release
-	else           launchpad->plot(x, y, 3, 3, false); // key pressed
+	bool play = false;
+	if (velo == 0) {
+		// key release
+		launchpad->clear(x, y);
+	} else {
+		// key pressed
+		launchpad->plot(x, y, 3, 3, false);
+		play = true;
+	}
+
+	if (launchpad->bindPadsFunc) launchpad->bindPadsFunc(note, play);
 };
 
 
@@ -127,4 +137,8 @@ void Launchpad::clear(int x, int y) {
 	uint16_t velocity = grid[x + y * 8];
 	uint32_t msg = 0x90 | (x + y * 16) << 8 | velocity << 16;
 	midiOutShortMsg(midiOut, msg);
+}
+
+void Launchpad::bind(void(*cb)(int, bool)) {
+	bindPadsFunc = cb;
 }
