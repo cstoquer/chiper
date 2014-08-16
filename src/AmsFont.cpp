@@ -1,5 +1,5 @@
 #include "AmsFont.h"
-#include "../../constants.h"
+#include "constants.h"
 
 const int CHAR_SIZE  = 8 * PIXEL;
 const int MAX_COLUMN = SCREEN_W / CHAR_SIZE;

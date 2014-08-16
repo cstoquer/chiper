@@ -22,8 +22,20 @@
 #include "src/Launchpad.h"
 
 
-float       mainVolume = 0.02;
+inline float cubicLimiterDisto(float x) {
+	const float b = -0.25;
+	const float c =  1.50;
+
+	if      (x <= -3) return -2;
+	else if (x <  -1) return -b * x * x + c * x - b;
+	else if (x <=  1) return  x;
+	else if (x <   3) return  b * x * x + c * x + b;
+	else              return  2;
+}
+
+float       mainVolume = 0.5;
 PulseSynth  pulseSynth;
+
 
 
 void audioCallback(void* udata, uint8_t* buffer, int len) {
@@ -31,8 +43,7 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 	int16_t* stream = (int16_t*) buffer;
 
 	for (len >>= 1; len; len--) {
-		pulseSynth.tic();
-		float out = pulseSynth.out;
+		float out = pulseSynth.tic();
 
 		// limit output
 		out = cubicLimiterDisto(out);
@@ -79,14 +90,15 @@ int main(int argc, char* argv[]) {
 	SDL_Surface* screen = SDL_SetVideoMode(SCREEN_W, SCREEN_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_WM_SetCaption("chiper", NULL);
 	RenderingContext ctx(screen);
-	ctx.backgroundColor(0, 0, 127);
+	ctx.backgroundColor(0, 0, 0);
 
 	// load images
-	AmsFont font("img/nintendoFont.bmp");
+	AmsFont font("img/nesFont.bmp");
 
-	font.paper(1);
-	font.pen(24);
-
+	font.paper(0);
+	font.pen(26);
+	font.locate(2, 2);
+	font.print("==== CHIPER ====");
 
 	// program main loop
 	bool run = true;
@@ -118,9 +130,6 @@ int main(int argc, char* argv[]) {
 		}
 
 		ctx.clear();
-		sld.draw(&font);
-		cut.draw(&font);
-		res.draw(&font);
 		ctx.drawImage(font.getImage(), 0, 0);
 		ctx.update();
 

@@ -4,5 +4,6 @@
 
 float noteToFreq(float);
 float map(float, float, float, float, float);
+// float cubicLimiterDisto(float);
 
 #endif

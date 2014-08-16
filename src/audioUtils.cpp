@@ -10,7 +10,7 @@ inline float map(float value, float iMin, float iMax, float oMin, float oMax) {
 	return oMin + (oMax - oMin) * (value - iMin) / (iMax - iMin);
 }
 
-inline float cubicLimiterDisto(float x) {
+/*inline float cubicLimiterDisto(float x) {
 	const float b = -0.25;
 	const float c =  1.50;
 
@@ -19,5 +19,5 @@ inline float cubicLimiterDisto(float x) {
 	else if (x <=  1) return  x;
 	else if (x <   3) return  b * x * x + c * x + b;
 	else              return  2;
-}
+}*/
 
