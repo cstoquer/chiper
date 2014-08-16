@@ -1,0 +1,11 @@
+# Ignore SDL binary
+SDL.dll
+
+# Ignore build files
+bin/
+obj/
+
+# Ignore files created by Code::Block
+*.layout
+*.cbp
+*.depend
