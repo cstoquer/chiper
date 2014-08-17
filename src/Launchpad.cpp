@@ -60,7 +60,9 @@ void CALLBACK MidiInCb(HMIDIIN device, uint16_t msg, Launchpad* launchpad,
 		play = true;
 	}
 
-	if (launchpad->bindPadsFunc) launchpad->bindPadsFunc(note, play);
+	int pad = 64 - y * 8 + x;
+
+	if (launchpad->bindPadsFunc) launchpad->bindPadsFunc(pad , play);
 };
 
 

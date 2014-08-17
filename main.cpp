@@ -33,8 +33,9 @@ inline float cubicLimiterDisto(float x) {
 	else              return  2;
 }
 
-float       mainVolume = 0.5;
+float       mainVolume = 0.8;
 PulseSynth  pulseSynth;
+int         polyphony = 0;
 
 void audioCallback(void* udata, uint8_t* buffer, int len) {
 
@@ -52,11 +53,13 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 	}
 }
 
-void midiCallback(int note, bool play) {
+void midiCallback(int pad, bool play) {
 	if (!play) {
-		pulseSynth.mute = true;
+		polyphony--;
+		if (polyphony == 0) pulseSynth.mute = true;
 	} else {
-		pulseSynth.setNote(note);
+		polyphony++;
+		pulseSynth.setNote(pad + 24);
 		pulseSynth.mute = false;
 	}
 		
