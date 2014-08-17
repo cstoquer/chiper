@@ -13,6 +13,7 @@
 // -------------- audio -------------
 #include "src/audioUtils.h"
 #include "src/PulseSynth.h"
+#include "src/NoteBuffer.h"
 
 // --------------- gui --------------
 #include "src/RenderingContext.h"
@@ -35,7 +36,7 @@ inline float cubicLimiterDisto(float x) {
 
 float       mainVolume = 0.8;
 PulseSynth  pulseSynth;
-int         polyphony = 0;
+NoteBuffer  noteBuffer;
 
 void audioCallback(void* udata, uint8_t* buffer, int len) {
 
@@ -54,12 +55,14 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 }
 
 void midiCallback(int pad, bool play) {
+	int note = pad + 24; // TODO: note map / scaler
+	int polyphony;
 	if (!play) {
-		polyphony--;
-		if (polyphony == 0) pulseSynth.mute = true;
+		note = noteBuffer.delNote(note);
+		if (note == 0) pulseSynth.mute = true;
+		else pulseSynth.setNote(note);
 	} else {
-		polyphony++;
-		pulseSynth.setNote(pad + 24);
+		if (noteBuffer.addNote(note)) pulseSynth.setNote(note);
 		pulseSynth.mute = false;
 	}
 		

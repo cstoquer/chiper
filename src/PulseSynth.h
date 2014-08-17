@@ -21,7 +21,7 @@ public:
 		tune = 0.0;
 		note = 36.0;
 		mute = true;
-		osc.width = 0.5;
+		osc.width = 0.25;
 	}
 
     float tic() {
