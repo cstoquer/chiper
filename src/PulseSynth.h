@@ -11,6 +11,7 @@ class PulseSynth {
 private:
 	OscPulse osc;
 	float    tune;
+	float    note;
 
 public:
 	bool     mute;
@@ -18,6 +19,7 @@ public:
 
 	PulseSynth() {
 		tune = 0.0;
+		note = 36.0;
 		mute = true;
 		osc.width = 0.5;
 	}
@@ -28,20 +30,17 @@ public:
 		return osc.out;
 	}
 
-	void setWidth(int value) {
-		if      (value <= 6)  osc.width = 0.06;
-		else if (value <= 12) osc.width = 0.12;
-		else if (value <= 25) osc.width = 0.25;
-		else if (value <= 50) osc.width = 0.50;
-		else                  osc.width = 0.75;
+	void setWidth(float w) {
+		osc.width = w;
 	}
 
 	void setTune(float t) {
 		tune = t;
-		// TODO: reset pitch ?
+		osc.freq = noteToFreq(note + tune);
 	}
 
-	void setNote(float note) {
+	void setNote(float n) {
+		note = n;
 		osc.freq = noteToFreq(note + tune);
 	}
 };
