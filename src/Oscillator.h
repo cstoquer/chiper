@@ -23,6 +23,10 @@ public:
 
 	virtual void tic() {
 	}
+
+	void restart() {
+		pos = 0.0;
+	}
 };
 
 #endif
