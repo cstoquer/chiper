@@ -40,6 +40,7 @@ public:
 	}
 
 	void setNote(float n) {
+		if (n == note) return;
 		note = n;
 		osc.freq = noteToFreq(note + tune);
 	}

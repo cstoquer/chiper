@@ -14,6 +14,7 @@
 #include "src/audioUtils.h"
 #include "src/PulseSynth.h"
 #include "src/NoteBuffer.h"
+#include "src/ArpController.h"
 
 // --------------- gui --------------
 #include "src/RenderingContext.h"
@@ -34,15 +35,22 @@ inline float cubicLimiterDisto(float x) {
 	else              return  2;
 }
 
-float       mainVolume = 0.8;
-PulseSynth  pulseSynth;
-NoteBuffer  noteBuffer;
+float          mainVolume = 0.8;
+PulseSynth     pulseSynth;
+NoteBuffer     noteBuffer;
+ArpController  arpController;
 
 void audioCallback(void* udata, uint8_t* buffer, int len) {
 
 	int16_t* stream = (int16_t*) buffer;
 
 	for (len >>= 1; len; len--) {
+		if (noteBuffer.polyphony > 0) {
+			if (arpController.tic()) {
+				pulseSynth.setNote(noteBuffer.buffer[arpController.out]);
+			}
+		}
+
 		float out = pulseSynth.tic();
 
 		// limit output
@@ -56,7 +64,6 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 
 void midiCallback(int pad, bool play) {
 	int note = pad + 24; // TODO: note map / scaler
-	int polyphony;
 	if (!play) {
 		note = noteBuffer.delNote(note);
 		if (note == 0) pulseSynth.mute = true;
@@ -65,7 +72,7 @@ void midiCallback(int pad, bool play) {
 		if (noteBuffer.addNote(note)) pulseSynth.setNote(note);
 		pulseSynth.mute = false;
 	}
-		
+	arpController.setLength(noteBuffer.polyphony);
 }
 
 
@@ -75,6 +82,8 @@ int main(int argc, char* argv[]) {
 	Launchpad launchpad;
 	launchpad.initMidi();
 	launchpad.bind(&midiCallback);
+
+	arpController.freq = 40.0;
 
 	// test
 	/*for (int x = 0; x < 4; x++) {
