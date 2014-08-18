@@ -11,12 +11,10 @@ protected:
 
 public:
 	float freq;
-	float phase;
 	float out;
 
 	Oscillator() {
 		freq  = 440.0;
-		phase = 0.0;
 		pos   = 0.0;
 		out   = 0.0;
 	}
