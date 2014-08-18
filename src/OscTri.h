@@ -8,16 +8,19 @@ class OscTri : public Oscillator {
 private:
 
 public:
-	float width;
 
 	OscTri() {
-		width = 0.5;
+		pos = 0.25;
 	}
 
 	void tic() {
 		pos += freq / SAMPLE_RATE;
 		if (pos > 1) pos -= 1;
-		out = 1 - 2 * ((pos < width) ? pos / width : 1 - (pos - width) / (1 - width));
+		out = (pos < 0.5) ? pos * 4 - 1 : 3 - 4 * pos;
+	}
+
+	void restart() {
+		pos = 0.25;
 	}
 };
 
