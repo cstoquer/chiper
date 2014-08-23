@@ -42,7 +42,7 @@ PulseSynth() {
 	mute = true;
 	osc.width = 0.25;
 	arpController.freq = 40.0;
-	envelope.setReleaseTime(0.5);
+	envelope.setReleaseTime(1.0);
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄

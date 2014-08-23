@@ -22,7 +22,7 @@ private:
 		// FIXME: if parameters changes while envelope playing,
 		//        there will be an audio glich.
 		//        process should only use previous output value, not t.
-		float r = 3000 + release * 47000;
+		float r = 3000 + release * 40000;
 		releaseTime = (int)r - 1;
 		a = (2 - 4 * curvature) / (r * r);
 		b = (4 * curvature - 3) / r;
