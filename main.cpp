@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
 			update = false;
 		}
 
-		SDL_Delay(40); // 25 FPS
+		SDL_Delay(100);
 	}
 
 	// close audio
