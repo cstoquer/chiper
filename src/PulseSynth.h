@@ -57,7 +57,7 @@ float tic() {
 	if (mute) return 0.0;
 	envelope.tic();
 	osc.tic();
-	return osc.out * envelope.out;
+	return osc.out * (float)((int)(envelope.out * 16)) / 16;
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
