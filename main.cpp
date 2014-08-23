@@ -13,8 +13,6 @@
 // -------------- audio -------------
 #include "src/audioUtils.h"
 #include "src/PulseSynth.h"
-#include "src/NoteBuffer.h"
-#include "src/ArpController.h"
 
 // --------------- gui --------------
 #include "src/RenderingContext.h"
@@ -37,20 +35,13 @@ inline float cubicLimiterDisto(float x) {
 
 float          mainVolume = 0.8;
 PulseSynth     pulseSynth;
-NoteBuffer     noteBuffer;
-ArpController  arpController;
+
 
 void audioCallback(void* udata, uint8_t* buffer, int len) {
 
 	int16_t* stream = (int16_t*) buffer;
 
 	for (len >>= 1; len; len--) {
-		if (noteBuffer.polyphony > 0) {
-			if (arpController.tic()) {
-				pulseSynth.setNote(noteBuffer.buffer[arpController.out]);
-			}
-		}
-
 		float out = pulseSynth.tic();
 
 		// limit output
@@ -64,15 +55,7 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 
 void midiCallback(int pad, bool play) {
 	int note = pad + 24; // TODO: note map / scaler
-	if (!play) {
-		note = noteBuffer.delNote(note);
-		if (note == 0) pulseSynth.mute = true;
-		else pulseSynth.setNote(note);
-	} else {
-		if (noteBuffer.addNote(note)) pulseSynth.setNote(note);
-		pulseSynth.mute = false;
-	}
-	arpController.setLength(noteBuffer.polyphony);
+	pulseSynth.noteEvent(note, play);
 }
 
 
@@ -82,16 +65,6 @@ int main(int argc, char* argv[]) {
 	Launchpad launchpad;
 	launchpad.initMidi();
 	launchpad.bind(&midiCallback);
-
-	arpController.freq = 40.0;
-
-	// test
-	/*for (int x = 0; x < 4; x++) {
-		for (int y = 0; y < 4; y++) {
-			launchpad.plot(x * 2,     y * 2,     x, y);
-			launchpad.plot(x * 2 + 1, y * 2 + 1, x, y);
-		}
-	}*/
 
 	// initialize SDL video and audio
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) return 1;
