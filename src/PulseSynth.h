@@ -13,12 +13,14 @@ private:
 
 float          tune;
 float          note;
-bool           mute;
 float          width;
+bool           mute;
 
 OscPulse       osc;
 NoteBuffer     noteBuffer;
 ArpController  arpController;
+DecayEnvelope  envelope;
+
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
  * set note.
@@ -40,6 +42,7 @@ PulseSynth() {
 	mute = true;
 	osc.width = 0.25;
 	arpController.freq = 40.0;
+	envelope.setReleaseTime(0.5);
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -52,8 +55,9 @@ float tic() {
 		}
 	}
 	if (mute) return 0.0;
+	envelope.tic();
 	osc.tic();
-	return osc.out;
+	return osc.out * envelope.out;
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -77,6 +81,7 @@ void setTune(float t) {
 void noteEvent(float n, bool p) {
 	if (p) {
 		if (noteBuffer.addNote(n)) setNote(n);
+		if (noteBuffer.polyphony == 1) envelope.trigger();
 		mute = false;
 	} else {
 		n = noteBuffer.delNote(n);

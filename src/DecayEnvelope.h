@@ -9,7 +9,6 @@ const float _decEnvSmoothInv = 1 - _decEnvSmooth;
 class DecayEnvelope {
 
 private:
-	float* trig;
 	int    t;
 	float  a;
 	float  b;
@@ -42,15 +41,12 @@ public:
 		update();
 	}
 
-	void connect(float* input) {
-		trig = input;
+	void trigger() {
+		stopped = false;
+		t = 0;
 	}
 
 	void tic() {
-		if (*trig > 0.8) {
-			stopped = false;
-			t = 0;
-		}
 		if (stopped) return;
 		if (t++ > releaseTime) {
 			stopped = true;
