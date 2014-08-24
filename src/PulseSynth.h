@@ -3,7 +3,8 @@
 
 #include "audioUtils.h"
 #include "OscPulse.h"
-#include "DecayEnvelope.h" // TODO: replace this by an ADSR envelope
+// #include "DecayEnvelope.h"
+#include "AdsrEnvelope.h"
 #include "NoteBuffer.h"
 #include "ArpController.h"
 
@@ -19,7 +20,7 @@ bool           mute;
 OscPulse       osc;
 NoteBuffer     noteBuffer;
 ArpController  arpController;
-DecayEnvelope  envelope;
+AdsrEnvelope   envelope;
 
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -39,10 +40,9 @@ public:
 PulseSynth() {
 	tune = 0.0;
 	note = 36.0;
-	mute = true;
+	// mute = true;
 	osc.width = 0.25;
 	arpController.freq = 40.0;
-	envelope.setReleaseTime(1.0);
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -54,7 +54,7 @@ float tic() {
 			setNote(noteBuffer.buffer[arpController.out]);
 		}
 	}
-	if (mute) return 0.0;
+	// if (mute) return 0.0;
 	envelope.tic();
 	osc.tic();
 	return osc.out * (float)((int)(envelope.out * 16)) / 16;
@@ -81,11 +81,11 @@ void setTune(float t) {
 void noteEvent(float n, bool p) {
 	if (p) {
 		if (noteBuffer.addNote(n)) setNote(n);
-		if (noteBuffer.polyphony == 1) envelope.trigger();
-		mute = false;
+		if (noteBuffer.polyphony == 1) envelope.triggerOn();
+		// mute = false;
 	} else {
 		n = noteBuffer.delNote(n);
-		if (n == 0) mute = true;
+		if (n == 0) envelope.triggerOff(); // mute = true;
 		else setNote(n);
 	}
 	arpController.setLength(noteBuffer.polyphony);
