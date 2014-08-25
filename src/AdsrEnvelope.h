@@ -19,12 +19,12 @@ public:
 	float out;
 
 	AdsrEnvelope() {
-		state   = 0;
-		attack  = 0.0101;
-		decay   = 0.9999;
-		sustain = 0.30;
-		release = 0.8;
-		out     = 0.0;
+		state = 0;
+		out   = 0.0;
+		setAttack(0.0);
+		setDecay(0.8);
+		setSustain(0.3);
+		setRelease(0.1);
 	}
 
 	void triggerOn() {
@@ -61,11 +61,11 @@ public:
 	}
 
 	void setAttack(float a) {
-		attack = 1 - a;
+		attack = 1 - a / 1000;
 	}
 
 	void setDecay(float d) {
-		decay = 1 - d;
+		decay = 1 - (1 - d) / 1000;
 	}
 
 	void setSustain(float s) {
@@ -73,7 +73,7 @@ public:
 	}
 
 	void setRelease(float r) {
-		release = 1 - r;
+		release = 1 - (1 - r) / 1000;
 	}
 };
 
