@@ -5,10 +5,6 @@ class AdsrEnvelope {
 
 private:
 	int state;
-	// unsigned long int t;
-	// unsigned long int _nAttackTime;
-	// unsigned long int _nDecayTime;
-	// unsigned long int _nReleaseTime;
 
 	float attack;
 	float decay;
