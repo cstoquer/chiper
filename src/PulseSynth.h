@@ -3,10 +3,12 @@
 
 #include "audioUtils.h"
 #include "OscPulse.h"
-// #include "DecayEnvelope.h"
+#include "OscTri.h"
+#include "DecayEnvelope.h"
 #include "AdsrEnvelope.h"
 #include "NoteBuffer.h"
 #include "ArpController.h"
+#include "NoteScaler.h"
 
 class PulseSynth {
 
@@ -18,9 +20,11 @@ float          width;
 bool           mute;
 
 OscPulse       osc;
+OscTri         lfo;
 NoteBuffer     noteBuffer;
 ArpController  arpController;
 AdsrEnvelope   envelope;
+NoteScaler     scaler;
 
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -42,7 +46,14 @@ PulseSynth() {
 	note = 36.0;
 	// mute = true;
 	osc.width = 0.25;
+	lfo.freq  = 0.3;
 	arpController.freq = 40.0;
+	// scaler.setNotes(0x0840);
+	scaler.addNote(0);
+	scaler.addNote(3);
+	scaler.addNote(4);
+	scaler.addNote(7);
+	scaler.addNote(9);
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -56,6 +67,9 @@ float tic() {
 	}
 	// if (mute) return 0.0;
 	envelope.tic();
+	lfo.tic();
+	float p = scaler.scaleClosest(60 + lfo.out * 30);
+	osc.freq = p;
 	osc.tic();
 	return osc.out * (float)((int)(envelope.out * 32)) / 32;
 }

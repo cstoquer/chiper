@@ -7,8 +7,8 @@
 class NoteScaler {
 
 private:
-	static bool  _init = false;
-	static float _noteMap[128];
+	bool  _init;
+	float _noteMap[128];
 
 	bool enable[12];
 	int  enabled;
@@ -56,10 +56,11 @@ public:
 		reset();
 	}
 
-	void setNote(uint16_t notes) {
+	void setNotes(uint16_t notes) {
+		// FIXME
 		enabled = 0;
 		for (int i = 0; i < 12; i++) {
-			if ((notes << i) & 1 == 1) {
+			if (((notes << i) & 1) == 1) {
 				enabled++;
 				enable[i] = true;
 			} else enable[i]= false;
@@ -69,18 +70,18 @@ public:
 
 	void addNote(int note) {
 		note = note % 12;
-		if (!enabled[note]) {
+		if (!enable[note]) {
 			enabled++;
-			enabled[note] = true;
+			enable[note] = true;
 			getClosest();
 		}
 	}
 
 	void delNote(int note) {
 		note = note % 12;
-		if (enabled[note]) {
+		if (enable[note]) {
 			enabled--;
-			enabled[note] = false;
+			enable[note] = false;
 			getClosest();
 		}
 	}
