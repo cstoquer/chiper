@@ -1,10 +1,10 @@
-#ifndef NOTE_SCALER_H
-#define NOTE_SCALER_H
+#ifndef KEY_QUANTIZER_H
+#define KEY_QUANTIZER_H
 
 #include <stdint.h>
 #include "audioUtils.h"
 
-class NoteScaler {
+class KeyQuantizer {
 
 private:
 	bool  _init;
@@ -51,7 +51,7 @@ private:
 
 public:
 
-	NoteScaler() {
+	KeyQuantizer() {
 		if (!_init) initialize();
 		reset();
 	}
