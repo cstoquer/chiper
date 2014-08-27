@@ -1,6 +1,7 @@
 #ifndef NOTE_SCALER_H
 #define NOTE_SCALER_H
 
+#include <stdint.h>
 #include "audioUtils.h"
 
 class NoteScaler {
@@ -55,8 +56,14 @@ public:
 		reset();
 	}
 
-	void setNote(int* notes) {
-		// TODO
+	void setNote(uint16_t notes) {
+		enabled = 0;
+		for (int i = 0; i < 12; i++) {
+			if ((notes << i) & 1 == 1) {
+				enabled++;
+				enable[i] = true;
+			} else enable[i]= false;
+		}
 		getClosest();
 	}
 
