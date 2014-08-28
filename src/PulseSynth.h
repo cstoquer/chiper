@@ -46,14 +46,14 @@ PulseSynth() {
 	note = 36.0;
 	// mute = true;
 	osc.width = 0.25;
-	lfo.freq  = 0.3;
+	lfo.freq  = 0.1;
 	arpController.freq = 40.0;
 	// keyQuant.setNotes(0x0840);
 	keyQuant.addNote(0);
+	keyQuant.addNote(1);
+	keyQuant.addNote(2);
 	keyQuant.addNote(3);
-	keyQuant.addNote(4);
-	keyQuant.addNote(7);
-	keyQuant.addNote(9);
+	keyQuant.addNote(5);
 }
 
 /**▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -68,7 +68,8 @@ float tic() {
 	// if (mute) return 0.0;
 	envelope.tic();
 	lfo.tic();
-	float p = keyQuant.scaleClosest(60 + lfo.out * 30);
+	float p = keyQuant.scaleEvenly(60 + lfo.out * 30);
+	// float p = keyQuant.scaleClosest(60 + lfo.out * 30);
 	osc.freq = p;
 	osc.tic();
 	return osc.out * (float)((int)(envelope.out * 32)) / 32;

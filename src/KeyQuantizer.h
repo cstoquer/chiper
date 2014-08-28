@@ -102,6 +102,21 @@ public:
 		return _noteMap[(octave * 12 + note) % 128];
 	}
 
+	float scaleEvenly(float tune) {
+		int n = (int)(tune + 0.5);
+		if (enabled == 0 || enabled == 12) return _noteMap[n];
+		int octave = n / 12;
+		tune = tune - octave * 12;
+		// TODO: better algorithm
+		int w = (int)(tune * enabled / 12);
+		int note = 0;
+		while (true) {
+			if (enable[note] && --w < 0) break;
+			note++;
+		}
+		return _noteMap[(octave * 12 + note) % 128];
+	}
+
 };
 
 #endif
