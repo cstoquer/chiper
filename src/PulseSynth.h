@@ -68,9 +68,6 @@ float tic() {
 	// if (mute) return 0.0;
 	envelope.tic();
 	lfo.tic();
-	// float p = keyQuant.scaleEvenly(60 + lfo.out * 30);
-	// float p = keyQuant.scaleClosest(60 + lfo.out * 30);
-	// osc.freq = p;
 	osc.tic();
 	return osc.out * (float)((int)(envelope.out * 32)) / 32;
 }
