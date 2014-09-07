@@ -55,6 +55,8 @@ void audioCallback(void* udata, uint8_t* buffer, int len) {
 	}
 }
 
+//▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+
 void midiCallback(int pad, bool play) {
 	int note = pad + 24; // TODO: note map / scaler
 	pulseSynth.noteEvent(note, play);
